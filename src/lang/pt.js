@@ -1,6 +1,7 @@
 export default {
   locale: 'pt',
   messages: {
-    'home.title': 'Titulo!'
+    'login.display': 'Descrubra músicas e crie playlists',
+    'login.button': 'Login com Spotify'
   }
 };
