@@ -2,6 +2,7 @@ import styled from 'styled-components/macro';
 
 export const Container = styled.div`
   max-width: 1070px;
+  width: 100%;
   margin: auto;
   padding: 0 20px;
 

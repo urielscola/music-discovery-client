@@ -21,7 +21,8 @@ const Login = ({ history }) => {
     if (error) {
       // todo
     }
-  }, []);
+  }, [query, login, history]);
+
   return (
     <>
       <Styles.Triangle position="top" />
@@ -34,7 +35,7 @@ const Login = ({ history }) => {
             marginBottom="15px"
             size={70}
           />
-          <Text size="medium" marginBottom="20px">
+          <Text size="large" marginBottom="20px">
             {intl.formatMessage({ id: 'login.display' })}
           </Text>
           <Styles.LoginButton
