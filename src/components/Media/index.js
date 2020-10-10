@@ -1,10 +1,13 @@
 import React, { memo, useRef, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import { FlexDiv, Text, Icon } from 'components';
 import { theme } from 'assets/styles';
 import * as Styles from './styles';
 
-const Media = ({ title, image, id, externalUrl, previewUrl, type }) => {
+const Media = ({ title, image, id, externalUrl, previewUrl, type, artist }) => {
+  const intl = useIntl();
+
   const ref = useRef();
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -46,8 +49,20 @@ const Media = ({ title, image, id, externalUrl, previewUrl, type }) => {
             z-index="1"
           />
         )}
-        <FlexDiv justifyContent="center" padding="30px 0" position="relative">
+        <FlexDiv
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          padding="30px 0"
+          position="relative"
+        >
           <Styles.Image src={image} alt={title} />
+          {artist && (
+            <Text marginTop="15px" size="small" color={theme.black}>
+              {intl.formatMessage({ id: 'global.from' })}{' '}
+              {artist.length > 13 ? `${artist.slice(0, 13)}...` : artist}
+            </Text>
+          )}
         </FlexDiv>
         <Styles.Footer>
           <Text appearence="bold" color={theme.black}>

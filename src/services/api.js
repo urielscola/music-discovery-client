@@ -83,7 +83,7 @@ const API = {
       headers: { ...defaultHeaders }
     });
 
-    return data.artists.map(item => ({
+    return data.artists.slice(0, 12).map(item => ({
       ...item,
       image: item.images.length > 0 ? item.images[0].url : ''
     }));
@@ -103,6 +103,28 @@ const API = {
         ...item,
         image: item.album.images[0].url
       }));
+  },
+
+  createPlaylist: async name => {
+    const { data } = await instance({
+      url: `${ENDPOINT}/playlists`,
+      method: 'POST',
+      data: { name },
+      headers: { ...defaultHeaders }
+    });
+
+    return data;
+  },
+
+  addToPlaylist: async (id, tracks) => {
+    const { data } = await instance({
+      url: `${ENDPOINT}/playlists/${id}/tracks`,
+      method: 'POST',
+      data: { tracks },
+      headers: { ...defaultHeaders }
+    });
+
+    return data;
   }
 };
 

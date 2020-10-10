@@ -4,6 +4,12 @@ import { theme as defaultTheme } from 'assets/styles';
 
 const common = css`
   font-family: ${({ theme }) => theme.fontPrimary};
+  ${({ onClick }) =>
+    !!onClick &&
+    css`
+      text-decoration: underline;
+      cursor: pointer;
+    `};
 `;
 
 const size = {

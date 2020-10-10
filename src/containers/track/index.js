@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Header, MainInfo, MediaGroup, Footer } from 'components';
+import { useIntl } from 'react-intl';
+import { useAlert } from 'react-alert';
+import { Grid, Header, MainInfo, MediaGroup, Footer, Text } from 'components';
 import { API } from 'services';
 
 const Track = ({ match }) => {
+  const intl = useIntl();
+  const alert = useAlert();
   const [track, setTrack] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
 
@@ -40,10 +44,13 @@ const Track = ({ match }) => {
         });
         setRecommendations(recommended);
       } catch (err) {
-        console.log(err);
+        alert.show(intl.formatMessage({ id: 'track.error.recommendations' }), {
+          timeout: 5000,
+          type: 'danger'
+        });
       }
     },
-    [match.params.id]
+    [intl, alert, match.params.id]
   );
 
   const fetchArtist = useCallback(async () => {
@@ -53,9 +60,30 @@ const Track = ({ match }) => {
       setTrack(response);
       fetchRecommendations(response);
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'track.error.getTrack' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, [match.params.id]);
+  }, [intl, alert, match.params.id]);
+
+  const savePlaylist = useCallback(async () => {
+    try {
+      const name = `${track.name} - Playlist`;
+      const playlist = await API.createPlaylist(name);
+      const tracks = recommendations.map(item => item.uri);
+      await API.addToPlaylist(playlist.id, tracks);
+      alert.show(intl.formatMessage({ id: 'track.feedback.savePlaylist' }), {
+        timeout: 5000,
+        type: 'success'
+      });
+    } catch (err) {
+      alert.show(intl.formatMessage({ id: 'track.error.savePlaylist' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
+    }
+  }, [intl, alert, track, recommendations]);
 
   useEffect(() => {
     fetchArtist();
@@ -71,15 +99,21 @@ const Track = ({ match }) => {
             title={track.name}
             subtitle={
               <Link to={`/artist/${track.artists[0].id}`}>
+                {intl.formatMessage({ id: 'global.from' })}{' '}
                 {track.artists[0].name}
               </Link>
             }
           />
         )}
         <MediaGroup
-          title="Suggested playlist"
+          title={intl.formatMessage({ id: 'track.media.suggestedPlaylist' })}
           items={recommendations}
           type="track"
+          actions={
+            <Text textDecoration="underline" onClick={savePlaylist}>
+              {intl.formatMessage({ id: 'track.media.savePlaylist' })}
+            </Text>
+          }
         />
       </Grid.Container>
       <Footer />

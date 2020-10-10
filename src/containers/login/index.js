@@ -1,5 +1,6 @@
 import React, { useEffect, memo } from 'react';
 import { useIntl } from 'react-intl';
+import { useAlert } from 'react-alert';
 import { FlexDiv, Icon, Text } from 'components';
 import { theme } from 'assets/styles';
 import { LOGIN_ENDPOINT } from 'services';
@@ -10,18 +11,21 @@ import * as Styles from './styles';
 const Login = ({ history }) => {
   const intl = useIntl();
   const query = getQuery();
+  const alert = useAlert();
   const { login } = useAuthContext();
 
   useEffect(() => {
     const { token, error } = query;
     if (token) {
       login({ jwt: token });
-      return history.push('/');
     }
     if (error) {
-      // todo
+      alert.show(intl.formatMessage({ id: 'login.error' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, [query, login, history]);
+  }, [intl, alert, query, login, history]);
 
   return (
     <>

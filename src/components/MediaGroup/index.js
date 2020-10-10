@@ -3,16 +3,19 @@ import { FlexDiv, Text, Media } from 'components';
 import Skeleton from 'react-loading-skeleton';
 import * as Styles from './styles';
 
-const MediaGroup = ({ title, items, type }) => (
-  <FlexDiv flexDirection="column" margin="30px 0">
-    <Text size="x-large" appearence="bold" marginBottom="25px">
-      {items.length === 0 ? <Skeleton width={200} height={35} /> : title}
-    </Text>
+const MediaGroup = ({ title, items, type, actions }) => (
+  <FlexDiv flexDirection="column" margin="50px 0">
+    <FlexDiv alignItems="center" marginBottom="25px">
+      <Text size="x-large" appearence="bold" marginRight="10px">
+        {items.length === 0 ? <Skeleton width={200} height={35} /> : title}
+      </Text>
+      {actions}
+    </FlexDiv>
     <Styles.Grid>
       {items.length === 0 &&
-        new Array(20)
+        new Array(12)
           .fill('')
-          .map((_, i) => <Skeleton key={i} width={150} height={213} />)}
+          .map((_, i) => <Styles.MediaPlaceholder key={i} />)}
       {items.length > 0 &&
         items.map(item => (
           <Media
@@ -23,6 +26,7 @@ const MediaGroup = ({ title, items, type }) => (
             key={item.id}
             previewUrl={item.preview_url}
             externalUrl={item.external_urls.spotify}
+            artist={type === 'track' ? item.artists[0].name : null}
           />
         ))}
     </Styles.Grid>

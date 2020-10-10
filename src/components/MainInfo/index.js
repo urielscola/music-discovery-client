@@ -15,7 +15,7 @@ const MainInfo = ({ image, title, subtitle }) => (
     </Text>
     {subtitle && (
       <Text color="#fff" marginTop="7px">
-        from {subtitle}
+        {subtitle}
       </Text>
     )}
   </FlexDiv>

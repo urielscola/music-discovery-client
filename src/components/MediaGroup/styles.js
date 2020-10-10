@@ -1,15 +1,22 @@
 import styled from 'styled-components';
+import Skeleton from 'react-loading-skeleton';
 import { medias } from 'assets/styles';
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-gap: 1.2rem;
 
-  > * {
-    margin-bottom: 20px;
-  }
+  ${medias.greaterThan('sm')`
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  `}
+`;
 
-  ${medias.greaterThan('lg')`
-    grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+export const MediaPlaceholder = styled(Skeleton)`
+  width: 130px;
+  height: 210px;
+
+  ${medias.greaterThan('sm')`
+    width: 150px;
   `}
 `;

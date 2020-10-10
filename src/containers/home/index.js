@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useIntl } from 'react-intl';
+import { useAlert } from 'react-alert';
 import {
   Grid,
   Header,
@@ -11,6 +13,8 @@ import { useAuthContext } from 'contexts';
 import { API } from 'services';
 
 const Home = () => {
+  const intl = useIntl();
+  const alert = useAlert();
   const { user } = useAuthContext();
   const [topArtists, setTopArtists] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
@@ -20,9 +24,12 @@ const Home = () => {
       const response = await API.getUserTopTracks();
       setTopTracks(response);
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'home.error.topTracks' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, []);
+  }, [intl, alert]);
 
   const fetchTopArtists = useCallback(async () => {
     try {
@@ -36,9 +43,12 @@ const Home = () => {
       });
       setTopArtists(response);
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'home.error.topArtists' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, []);
+  }, [intl, alert]);
 
   useEffect(() => {
     fetchTopArtists();
@@ -56,12 +66,25 @@ const Home = () => {
               title={user.display_name}
             />
             <Statistics
-              items={[{ label: 'Followers', count: user.followers.total }]}
+              items={[
+                {
+                  label: intl.formatMessage({ id: 'home.statistic.followers' }),
+                  count: user.followers.total
+                }
+              ]}
             />
           </>
         )}
-        <MediaGroup title="Your top artists" items={topArtists} type="artist" />
-        <MediaGroup title="Your top tracks" items={topTracks} type="track" />
+        <MediaGroup
+          title={intl.formatMessage({ id: 'home.media.topArtists' })}
+          items={topArtists}
+          type="artist"
+        />
+        <MediaGroup
+          title={intl.formatMessage({ id: 'home.media.topTracks' })}
+          items={topTracks}
+          type="track"
+        />
       </Grid.Container>
       <Footer />
     </>

@@ -7,7 +7,7 @@ const Tags = ({ items }) => (
   <FlexDiv
     margin="15px auto"
     justifyContent="center"
-    maxWidth="200px"
+    maxWidth="320px"
     flexWrap="wrap"
   >
     {items.length === 0 &&

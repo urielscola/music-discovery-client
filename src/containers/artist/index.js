@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useIntl } from 'react-intl';
+import { useAlert } from 'react-alert';
 import {
   Grid,
   Header,
   MainInfo,
   MediaGroup,
   Footer,
+  Text,
   Tags,
   Statistics
 } from 'components';
 import { API } from 'services';
 
 const Artist = ({ match }) => {
+  const intl = useIntl();
+  const alert = useAlert();
   const [artist, setArtist] = useState(null);
   const [topTracks, setTopTracks] = useState([]);
   const [relatedArtists, setRelatedArtists] = useState([]);
@@ -22,24 +27,30 @@ const Artist = ({ match }) => {
       const response = await API.getArtist(match.params.id);
       setArtist(response);
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'artist.error.getArtist' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, [match.params.id]);
+  }, [intl, alert, match.params.id]);
 
   const fetchTopTracks = useCallback(async () => {
     try {
       setRelatedArtists([]);
       const response = await API.getArtistTopTracks(match.params.id);
       setTopTracks(
-        response.data.tracks.map(track => ({
+        response.data.tracks.slice(0, 6).map(track => ({
           ...track,
           image: track.album.images[0].url
         }))
       );
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'artist.error.getTopTracks' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, [match.params.id]);
+  }, [intl, alert, match.params.id]);
 
   const fetchRelated = useCallback(async () => {
     try {
@@ -54,9 +65,12 @@ const Artist = ({ match }) => {
       });
       setRelatedArtists(response);
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'artist.error.related' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, [match.params.id]);
+  }, [intl, alert, match.params.id]);
 
   const fetchRecommendations = useCallback(async () => {
     try {
@@ -66,9 +80,30 @@ const Artist = ({ match }) => {
       });
       setRecommendations(response);
     } catch (err) {
-      console.log(err);
+      alert.show(intl.formatMessage({ id: 'artist.error.recommendations' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
     }
-  }, [match.params.id]);
+  }, [intl, alert, match.params.id]);
+
+  const savePlaylist = useCallback(async () => {
+    try {
+      const name = `${artist.name} - Playlist`;
+      const playlist = await API.createPlaylist(name);
+      const tracks = recommendations.map(item => item.uri);
+      await API.addToPlaylist(playlist.id, tracks);
+      alert.show(intl.formatMessage({ id: 'artist.feedback.savePlaylist' }), {
+        timeout: 5000,
+        type: 'success'
+      });
+    } catch (err) {
+      alert.show(intl.formatMessage({ id: 'artist.error.savePlaylist' }), {
+        timeout: 5000,
+        type: 'danger'
+      });
+    }
+  }, [intl, alert, recommendations, artist]);
 
   useEffect(() => {
     fetchArtist();
@@ -87,26 +122,41 @@ const Artist = ({ match }) => {
             <Tags items={artist.genres} />
             <Statistics
               items={[
-                { label: 'Followers', count: artist.followers.total },
-                { label: 'Popularity', count: `${artist.popularity}%` }
+                {
+                  label: intl.formatMessage({
+                    id: 'artist.statistics.followers'
+                  }),
+                  count: artist.followers.total.toLocaleString()
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'artist.statistics.popularity'
+                  }),
+                  count: `${artist.popularity}%`
+                }
               ]}
             />
           </>
         )}
         <MediaGroup
-          title={`${artist ? artist.name : ''} top tracks`}
+          title={intl.formatMessage({ id: 'artist.media.topTracks' })}
           items={topTracks}
           type="track"
         />
         <MediaGroup
-          title={`${artist ? artist.name : ''} related artists`}
+          title={intl.formatMessage({ id: 'artist.media.relatedArtists' })}
           items={relatedArtists}
           type="artist"
         />
         <MediaGroup
-          title="Suggested playlist"
+          title={intl.formatMessage({ id: 'artist.media.suggestedPlaylist' })}
           items={recommendations}
           type="track"
+          actions={
+            <Text textDecoration="underline" onClick={savePlaylist}>
+              {intl.formatMessage({ id: 'artist.media.savePlaylist' })}
+            </Text>
+          }
         />
       </Grid.Container>
       <Footer />

@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { medias } from '../../assets/styles';
 
 export const Container = styled.div`
-  width: 95%;
   position: relative;
+  width: 130px;
   background-color: ${({ theme }) => theme.white};
   border-radius: ${({ theme }) => theme.borderRadius};
 
-  ${medias.greaterThan('lg')`
+  ${medias.greaterThan('sm')`
     width: 150px;
   `};
 `;

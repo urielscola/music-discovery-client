@@ -5,7 +5,11 @@ const colors = {
   white: '#ffffff',
   green: '#03C4A1',
   purple: '#843163',
-  gray: '#C4C4C4'
+  gray: '#C4C4C4',
+  attention: '#dfb52b',
+  info: '#274cb1',
+  danger: '#e35b5c',
+  success: '#03C4A1'
 };
 
 const common = {
@@ -21,8 +25,8 @@ Object.keys(colors).forEach(key => {
 
 const typography = {
   fontPrimary: '"Dosis", sans-serif',
-  fontSizeXSmall: '0.5rem',
-  fontSizeSmall: '0.75rem',
+  fontSizeXSmall: '0.7rem',
+  fontSizeSmall: '0.85rem',
   fontSizeNormal: '1rem',
   fontSizeMedium: '1.25rem',
   fontSizeLarge: '1.5rem',
