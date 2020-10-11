@@ -114,6 +114,7 @@ const Media = ({ title, image, id, externalUrl, previewUrl, type, artist }) => {
           autoPlay={false}
           muted
           onCanPlayThrough={() => setAudioLoaded(true)}
+          onLoadedMetadata={() => setAudioLoaded(true)}
         >
           O seu navegador não suporta o elemento <code>audio</code>.
         </Styles.Preview>
