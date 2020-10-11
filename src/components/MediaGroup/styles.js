@@ -13,7 +13,7 @@ export const Grid = styled.div`
 `;
 
 export const MediaPlaceholder = styled(Skeleton)`
-  width: 130px;
+  width: 100%;
   height: 210px;
 
   ${medias.greaterThan('sm')`
