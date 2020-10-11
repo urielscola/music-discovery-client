@@ -33,8 +33,11 @@ const typography = {
   fontSizeXLarge: '2rem'
 };
 
+const breakpoints = ['767px', '992px', '1200px'];
+
 export const theme = {
   ...common,
   ...colors,
-  ...typography
+  ...typography,
+  breakpoints
 };

@@ -2,6 +2,7 @@ import React, { memo, useRef, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { FlexDiv, Text, Icon } from 'components';
+import { isMobile } from 'utils';
 import { theme } from 'assets/styles';
 import * as Styles from './styles';
 
@@ -10,20 +11,42 @@ const Media = ({ title, image, id, externalUrl, previewUrl, type, artist }) => {
 
   const ref = useRef();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [audioLoaded, setAudioLoaded] = useState(false);
+  const mobile = isMobile();
 
-  const _play = useCallback(() => {
-    if (ref && ref.current && previewUrl) {
-      setIsPlaying(true);
-      ref.current.play();
+  const _play = useCallback(async () => {
+    if (ref && ref.current && previewUrl && audioLoaded) {
+      const playPromise = ref.current.play();
+      if (playPromise !== undefined) {
+        try {
+          await playPromise;
+          ref.current.muted = false;
+          setIsPlaying(true);
+        } catch (err) {
+          console.log({ err });
+        }
+      }
     }
-  }, [previewUrl]);
+  }, [previewUrl, audioLoaded, mobile]);
 
   const _pause = useCallback(() => {
-    if (ref && ref.current && previewUrl) {
+    if (ref && ref.current && previewUrl && audioLoaded) {
       setIsPlaying(false);
       ref.current.pause();
     }
-  }, [previewUrl]);
+  }, [previewUrl, audioLoaded, mobile]);
+
+  const _toggle = useCallback(() => {
+    if (ref && ref.current && previewUrl && audioLoaded && mobile) {
+      if (isPlaying) {
+        setIsPlaying(false);
+        _pause();
+      } else {
+        setIsPlaying(true);
+        _play();
+      }
+    }
+  }, [isPlaying, audioLoaded, previewUrl, mobile]);
 
   return (
     <Styles.Container onMouseEnter={_play} onMouseLeave={_pause}>
@@ -38,7 +61,7 @@ const Media = ({ title, image, id, externalUrl, previewUrl, type, artist }) => {
           top="5px"
           onClick={() => window.open(externalUrl)}
         />
-        {isPlaying && (
+        {isPlaying && !mobile && (
           <Icon
             variant="play"
             size={20}
@@ -70,8 +93,28 @@ const Media = ({ title, image, id, externalUrl, previewUrl, type, artist }) => {
           </Text>
         </Styles.Footer>
       </Link>
+      <Styles.MobileActions>
+        <FlexDiv>
+          {previewUrl && audioLoaded && (
+            <Icon
+              variant={isPlaying ? 'pause' : 'play'}
+              size={20}
+              color={theme.green}
+              onClick={_toggle}
+            />
+          )}
+        </FlexDiv>
+      </Styles.MobileActions>
       {previewUrl && (
-        <Styles.Preview src={previewUrl} preload="auto" ref={ref} loop>
+        <Styles.Preview
+          src={previewUrl}
+          preload="auto"
+          ref={ref}
+          loop
+          autoPlay={false}
+          muted
+          onCanPlayThrough={() => setAudioLoaded(true)}
+        >
           O seu navegador não suporta o elemento <code>audio</code>.
         </Styles.Preview>
       )}

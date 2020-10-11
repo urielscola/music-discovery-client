@@ -5,8 +5,16 @@ import * as Styles from './styles';
 
 const MediaGroup = ({ title, items, type, actions }) => (
   <FlexDiv flexDirection="column" margin="50px 0">
-    <FlexDiv alignItems="center" marginBottom="25px">
-      <Text size="x-large" appearence="bold" marginRight="10px">
+    <FlexDiv
+      flexDirection={['column', 'row']}
+      alignItems={['flex-start', 'center']}
+      marginBottom="25px"
+    >
+      <Text
+        size="x-large"
+        appearence="bold"
+        margin={['0 0 10px 0', '0 20px 0 0']}
+      >
         {items.length === 0 ? <Skeleton width={200} height={35} /> : title}
       </Text>
       {actions}

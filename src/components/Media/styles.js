@@ -3,7 +3,7 @@ import { medias } from '../../assets/styles';
 
 export const Container = styled.div`
   position: relative;
-  width: 130px;
+  width: 100%;
   background-color: ${({ theme }) => theme.white};
   border-radius: ${({ theme }) => theme.borderRadius};
 
@@ -29,11 +29,24 @@ export const Image = styled.img`
 export const Footer = styled.div`
   background-color: ${({ theme }) => theme.gray};
   text-align: center;
-  border-radius: 0px 0px 5px 5px;
   padding: 10px;
+
+  ${medias.greaterThan('lg')`
+    border-radius: 0px 0px 5px 5px;
+  `};
 `;
 
 export const Preview = styled.audio`
   opacity: 0;
   visibility: hidden;
+`;
+
+export const MobileActions = styled.div`
+  border-radius: 0px 0px 5px 5px;
+  background-color: ${({ theme }) => theme.white};
+  padding: 7px;
+
+  ${medias.greaterThan('lg')`
+    display: none;
+  `};
 `;
