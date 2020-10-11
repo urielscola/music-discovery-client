@@ -7,7 +7,7 @@ export const Triangle = styled.div`
   border-top: 0rem solid ${({ theme }) => theme.purple};
   border-bottom: 40vw solid transparent;
   border-left: 40vw solid ${({ theme }) => theme.purple};
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 
