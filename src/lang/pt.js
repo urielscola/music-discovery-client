@@ -3,7 +3,7 @@ export default {
   messages: {
     'global.from': 'de',
     'header.logout': 'Sair',
-    'login.display': 'Descrubra músicas e crie playlists',
+    'login.display': 'Descubra músicas e crie playlists',
     'login.button': 'Login com Spotify',
     'login.error':
       'Não foi possível realizar seu login. Tente novamente em alguns instantes.',
